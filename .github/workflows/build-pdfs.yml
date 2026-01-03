@@ -1,0 +1,39 @@
+name: Build PDFs
+
+on:
+    push:
+        branches: ["main"]
+    workflow_dispatch:
+
+permissions:
+    contents: write
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            # Build every LaTeX project whose main file is main.tex under sources/*
+            - name: Build PDFs
+              run: |
+                  set -e
+                  sudo apt-get update
+                  sudo apt-get install -y latexmk texlive-latex-extra texlive-fonts-recommended texlive-science texlive-bibtex-extra biber
+
+                  mkdir -p docs
+
+                  for dir in sources/*; do
+                    if [ -d "$dir" ] && [ -f "$dir/main.tex" ]; then
+                      echo "Building $dir/main.tex"
+                      (cd "$dir" && latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex)
+                      slug=$(basename "$dir")
+                      cp "$dir/main.pdf" "docs/${slug}.pdf"
+                    fi
+                  done
+
+            - name: Commit PDFs
+              uses: stefanzweifel/git-auto-commit-action@v5
+              with:
+                  commit_message: "Auto-build PDFs"
+                  file_pattern: docs/*.pdf
