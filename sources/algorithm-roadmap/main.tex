@@ -1,0 +1,177 @@
+\documentclass[10pt]{article}
+
+\usepackage[margin=0.75in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{datetime2}
+\usepackage{fancyhdr}
+
+\setstretch{1.15}
+\setlist[itemize]{leftmargin=*, itemsep=4pt}
+
+\newcommand{\lastupdated}{Last updated: \DTMtoday}
+
+\begin{document}
+
+\begingroup
+\renewcommand{\thefootnote}{}
+\footnotetext{\lastupdated}
+\addtocounter{footnote}{-1}
+\endgroup
+
+\begin{center}
+    {\LARGE \textbf{From Foundations to Research: An Algorithms Roadmap}}\\
+\end{center}
+
+\vspace{0.8em}
+
+\noindent
+\noindent
+\textbf{Purpose and Scope.}
+This roadmap is designed for undergraduate students and early graduate learners who want to develop a rigorous, proof-oriented understanding of algorithms and algorithmic thinking. Rather than serving as a checklist of topics, the goal is to build strong modeling intuition, formal reasoning skills, and the ability to design and analyze algorithms across paradigms such as divide-and-conquer, greedy methods, dynamic programming, graph algorithms, and complexity theory.
+
+\medskip
+\noindent
+This roadmap reflects the path I personally followed to build a strong foundation in algorithms. While there are many excellent resources and valid approaches to learning algorithms, this structure emphasizes depth, conceptual clarity, and proof-based reasoning. Readers are encouraged to adapt the roadmap based on their background, goals, or preferred resources, while preserving the core progression of ideas and algorithmic paradigms.
+
+\medskip
+\noindent
+Following this roadmap prepares the reader to confidently approach advanced topics such as randomized algorithms, approximation algorithms, streaming and online algorithms, and theoretical computer science research. Upon completion, readers are well-positioned to engage with graduate-level algorithms courses, research papers, and independent problem-solving in algorithms and complexity theory.
+
+\medskip
+\noindent
+\textbf{References Used.}
+Throughout the roadmap, the following standard resources are referenced:
+\begin{itemize}
+    \item \textbf{CLRS}: \emph{Introduction to Algorithms} by Cormen, Leiserson, Rivest, and Stein
+    \item \textbf{KT}: \emph{Algorithm Design} by Kleinberg and Tardos
+    \item \textbf{Roughgarden Courses}: Tim Roughgarden’s \emph{Algorithms Specialization} on Coursera
+\end{itemize}
+
+\vspace{0.8em}
+\hrule
+\vspace{0.5em}
+
+\section*{Phase 0: Foundations}
+
+\subsection*{0.1 Algorithmic Analysis Core}
+\begin{itemize}
+    \item \textbf{CLRS Chapters 1--3}: Role of algorithms, asymptotic analysis, running times
+    \item \textbf{Roughgarden Course 1}: Week 1
+\end{itemize}
+
+\subsection*{0.2 Sorting \& Selection (Canonical Problems)}
+\begin{itemize}
+    \item \textbf{CLRS Chapter 6}: Heapsort
+    \item \textbf{CLRS Chapter 7}: Quicksort
+    \item \textbf{CLRS Chapter 8}: Sorting in linear time
+    \item \textbf{CLRS Chapter 9}: Medians and order statistics
+\end{itemize}
+
+\subsection*{0.3 Core Data Structures}
+\begin{itemize}
+    \item \textbf{CLRS Chapter 10}: Elementary data structures
+    \item \textbf{CLRS Chapter 11}: Hash tables
+    \item \textbf{CLRS Chapter 12}: Binary search trees
+    \item \textbf{CLRS Chapter 13}: Red-black trees
+    \item \textbf{Roughgarden Course 2}: Week 3, Week 4
+\end{itemize}
+
+\subsection*{0.4 Amortization \& Union-Find}
+\begin{itemize}
+    \item \textbf{CLRS Chapter 16}: Amortized analysis
+    \item \textbf{CLRS Chapter 19}: Disjoint sets
+\end{itemize}
+
+\hrule
+\vspace{0.8em}
+
+\section*{Phase 1: Core Algorithmic Design (KT $\rightarrow$ CLRS)}
+
+\subsection*{1.1 Algorithmic Mindset \& Modeling}
+\begin{itemize}
+    \item \textbf{KT Chapters 1--2}: Stable matching, problem modeling, tractability
+\end{itemize}
+
+\subsection*{1.2 Divide and Conquer}
+\begin{itemize}
+    \item \textbf{KT Chapter 5}: Design intuition and recurrences
+    \item \textbf{CLRS Chapter 4}: Formal divide-and-conquer analysis
+    \item \textbf{Roughgarden Course 1}: Week 2, Week 3
+\end{itemize}
+
+\subsection*{1.3 Greedy Algorithms}
+\begin{itemize}
+    \item \textbf{KT Chapter 4}: Exchange arguments, MST, Huffman coding
+    \item \textbf{CLRS Chapter 15}: Greedy-choice property, formal proofs
+    \item \textbf{Roughgarden Course 3}: Week 1, Week 2
+\end{itemize}
+
+\subsection*{1.4 Dynamic Programming}
+\begin{itemize}
+    \item \textbf{KT Chapter 6}: DP modeling and problem decomposition
+    \item \textbf{CLRS Chapter 14}: Formal DP framework
+    \item \textbf{Roughgarden Course 3}: Week 3, Week 4
+\end{itemize}
+
+\hrule
+\vspace{0.8em}
+
+\section*{Phase 2: Graphs \& Flows (KT $\rightarrow$ CLRS)}
+
+\subsection*{2.1 Graph Algorithms}
+\begin{itemize}
+    \item \textbf{KT Chapter 3}: Graph traversal and connectivity
+    \item \textbf{CLRS Chapter 20}: BFS, DFS, SCCs
+    \item \textbf{CLRS Chapter 21}: Minimum spanning trees
+    \item \textbf{CLRS Chapter 22}: Single-source shortest paths
+    \item \textbf{Roughgarden Course 2}: Week 1, Week 2
+\end{itemize}
+
+\subsection*{2.2 Network Flow}
+\begin{itemize}
+    \item \textbf{KT Chapter 7}: Max-flow, min-cut, applications
+    \item \textbf{CLRS Chapter 24}: Formal flow algorithms
+\end{itemize}
+
+\hrule
+\vspace{0.8em}
+
+\section*{Phase 3: Limits of Computation}
+
+\subsection*{3.1 NP-Completeness}
+\begin{itemize}
+    \item \textbf{KT Chapter 8}: Reductions, gadgets, NP intuition
+    \item \textbf{CLRS Chapter 34}: Formal NP-completeness proofs
+    \item \textbf{Roughgarden Course 4}: Week 1, Week 2
+\end{itemize}
+
+\hrule
+\vspace{0.8em}
+
+\section*{Phase 4: Research-Oriented Topics}
+
+\subsection*{4.1 Randomized Algorithms}
+\begin{itemize}
+    \item \textbf{KT Chapter 13}: Randomized algorithms and Chernoff bounds
+    \item \textbf{Roughgarden Course 1}: Week 4
+\end{itemize}
+
+\subsection*{4.2 Approximation Algorithms}
+\begin{itemize}
+    \item \textbf{KT Chapter 11}: Greedy, LP rounding, PTAS
+    \item \textbf{CLRS Chapter 35}: Approximation techniques
+    \item \textbf{Roughgarden Course 4}: Week 3
+\end{itemize}
+
+\subsection*{4.3 Optional CLRS Topics (On Demand)}
+\begin{itemize}
+    \item \textbf{CLRS Chapter 23}: All-pairs shortest paths
+    \item \textbf{CLRS Chapter 32}: String matching
+    \item \textbf{CLRS Chapter 30}: FFT
+    \item \textbf{CLRS Chapter 29}: Linear programming
+    \item \textbf{Roughgarden Course 4}: Week 4
+\end{itemize}
+
+\end{document}
