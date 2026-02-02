@@ -1,0 +1,258 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{mathtools}
+
+\usepackage[none]{hyphenat}
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
+
+
+\setlist[itemize]{leftmargin=*, itemsep=4pt}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+
+\title{\LARGE \bfseries Expected Number of Comparisons in Randomized Quicksort}
+\author{\Large Manish Acharya}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+Randomized Quicksort is one of the most celebrated examples where randomness transforms a fragile worst-case algorithm into one that is efficient and robust in expectation.
+Unlike deterministic Quicksort, which fixes a pivot-selection rule and can suffer $\Theta(n^2)$ behavior on structured inputs, Randomized Quicksort differs only in selecting pivots uniformly at random.
+
+\medskip
+
+\noindent Although its expected running time is often stated as $O(n \log n)$, the most illuminating analysis does not proceed through recurrence relations or recursion trees. Instead, the key idea is to analyze a more fundamental quantity: the \emph{expected number of comparisons} performed during the execution of the algorithm.
+
+\medskip
+
+\noindent This approach has several advantages. It:
+\begin{itemize}
+    \item avoids solving complicated recurrences,
+    \item highlights the probabilistic structure of the algorithm,
+    \item and introduces powerful tools such as indicator random variables and linearity of expectation.
+\end{itemize}
+
+\medskip
+
+\noindent In this note, we present a structured and concept-driven analysis of the expected number of comparisons in Randomized Quicksort, with particular emphasis on the intuition behind each lemma and probabilistic argument.
+
+
+\section{Why Count Comparisons?}
+
+In comparison-based sorting algorithms, comparisons dominate the running time.
+Randomized Quicksort differs from deterministic Quicksort only in how it selects pivots, yet this small change dramatically alters its expected performance.
+
+\medskip
+
+\noindent A key observation is:
+
+\begin{quote}
+\emph{The total running time of Quicksort is proportional to the total number of element comparisons performed.}
+\end{quote}
+
+\noindent Thus, instead of analyzing recursion depth or worst-case splits, we analyze the expected number of comparisons directly.
+
+\section{Model and Assumptions}
+
+We assume:
+\begin{itemize}
+    \item All elements are \emph{distinct}.
+    \item The pivot in each recursive call is chosen \emph{uniformly at random} from the current subarray.
+\end{itemize}
+
+\noindent Let the input elements be
+\[
+z_1 < z_2 < \cdots < z_n,
+\]
+where the indices refer to positions in the \emph{sorted order}, not the \emph{input order}.
+
+\section{A Key Structural Property of Quicksort}
+
+\begin{lemma}
+No two elements are ever compared more than once during the execution of Quicksort.
+\end{lemma}
+
+\begin{proof}
+Two elements are compared only when one of them is chosen as a pivot while both lie in the same recursive subproblem.
+
+\medskip
+
+\noindent Once a pivot element is chosen, the partition procedure permanently separates the remaining elements into two disjoint subarrays: those smaller than the pivot and those larger than it. Any two elements that fall into different subarrays after this partition will never appear together in any future recursive call.
+
+\medskip
+
+\noindent Since the pivot itself is removed from all future recursive calls, any comparison involving that pivot can occur only at the moment it is chosen. Consequently, once two elements are separated by a pivot, or one of them is chosen as a pivot, they can never be compared again.
+\end{proof}
+
+\medskip
+
+\noindent This property allows us to count comparisons on a \emph{pair-by-pair} basis.
+
+\section{When Are Two Elements Compared?}
+
+Let's fix two elements $z_i$ and $z_j$ with $i < j$.
+
+\begin{lemma}
+Elements $z_i$ and $z_j$ are compared if and only if one of them is chosen as the \emph{first pivot} among the elements
+\[
+\{z_i, z_{i+1}, \ldots, z_j\}.
+\]
+\end{lemma}
+
+\medskip
+
+\begin{proof}
+Initially, all elements in $\{z_i, \ldots, z_j\}$ belong to the same recursive call.
+
+\begin{itemize}
+    \item If some $z_k$ with $i < k < j$ is chosen first as a pivot, then $z_i$ and $z_j$ fall on opposite sides of the partition and are never compared.
+    \item If either $z_i$ or $z_j$ is chosen first, it is compared against every other element in the set, including the other one.
+\end{itemize}
+
+\medskip
+
+\noindent Thus, the comparison occurs if and only if $z_i$ or $z_j$ is the first pivot chosen from the set.
+\end{proof}
+
+\section{Probability of a Comparison}
+
+\begin{lemma}
+For $i < j$, the probability that $z_i$ and $z_j$ are compared is
+\[
+\Pr[z_i \text{ is compared with } z_j] = \frac{2}{j - i + 1}.
+\]
+\end{lemma}
+
+\begin{proof}
+The set $\{z_i, \ldots, z_j\}$ has size $j - i + 1$.
+
+\medskip
+
+\noindent Each element is equally likely to be the first pivot chosen from this set.
+Only two outcomes ($z_i$ or $z_j$) cause a comparison.
+
+\medskip
+
+\noindent Thus,
+\[
+\Pr[z_i \text{ is compared with } z_j] = \frac{2}{j - i + 1}.
+\]
+\end{proof}
+
+\medskip
+
+\noindent This probability computation captures the core randomness of the algorithm.
+
+\section{Indicator Random Variables}
+
+Let's define, for $1 \le i < j \le n$,
+\[
+X_{ij} =
+\begin{cases}
+1 & \text{if } z_i \text{ is compared with } z_j, \\
+0 & \text{otherwise}.
+\end{cases}
+\]
+
+\medskip
+
+\noindent Since each pair of distinct elements can be compared at most once, we index comparisons by unordered pairs $(i,j)$ with $i<j$.
+
+\medskip
+
+\noindent Let
+\[
+X = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} X_{ij}
+\]
+be the total number of comparisons performed by the algorithm.
+
+\section{Main Result}
+
+\begin{theorem}
+The expected number of comparisons performed by Randomized Quicksort on $n$ distinct elements is $O(n \log n)$.
+\end{theorem}
+
+\begin{proof}
+We have
+\[
+X = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} X_{ij},
+\]
+where $X_{ij}$ is the indicator of the event that $z_i$ is compared with $z_j$.
+By linearity of expectation,
+\[
+\mathbb{E}[X]
+= \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} \mathbb{E}[X_{ij}]
+= \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} \Pr[X_{ij}=1].
+\]
+By the previous lemma, $\Pr[X_{ij}=1] = \frac{2}{j-i+1}$, hence
+\[
+\mathbb{E}[X]
+= \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} \frac{2}{j-i+1}.
+\]
+Now substitute $k = j-i$ (so $k \in \{1,2,\ldots,n-i\}$):
+\[
+\mathbb{E}[X]
+= \sum_{i=1}^{n-1} \sum_{k=1}^{n-i} \frac{2}{k+1}
+\le \sum_{i=1}^{n-1} \sum_{k=1}^{n-1} \frac{2}{k+1}
+= (n-1)\sum_{k=1}^{n-1} \frac{2}{k+1}.
+\]
+Using the harmonic-series bound $\sum_{t=1}^{m} \frac{1}{t} = O(\log m)$, we get
+\[
+\sum_{k=1}^{n-1} \frac{1}{k+1}
+= \sum_{t=2}^{n} \frac{1}{t}
+\le \sum_{t=1}^{n} \frac{1}{t}
+= O(\log n).
+\]
+Therefore,
+\[
+\mathbb{E}[X] = O(n \log n),
+\]
+as claimed.
+\end{proof}
+
+
+\section{Conclusion}
+
+Randomized Quicksort provides a canonical example of how randomness can dramatically simplify both algorithm design and analysis. By focusing on the expected number of comparisons rather than recursive structure or worst-case inputs, we obtain a clean and intuitive proof of the $O(n \log n)$ expected running time.
+
+\medskip
+
+\noindent The central idea is to decompose the algorithm’s behavior into pairwise events and to analyze each event independently using indicator random variables. This approach avoids recurrence relations altogether and highlights a powerful general principle: expected performance can often be understood by counting how frequently simple events occur.
+
+\medskip
+
+\noindent Beyond Quicksort, the techniques used in this analysis—linearity of expectation, indicator variables, and pairwise reasoning—recur throughout the study of randomized algorithms. They appear in analyses of hashing, randomized search trees, and selection algorithms, where similar probabilistic decompositions lead to transparent and robust performance guarantees.
+
+\medskip
+
+\noindent Viewed in this light, Randomized Quicksort is not only an efficient sorting algorithm, but also an instructive case study in probabilistic algorithm analysis.
+
+
+\section*{References}
+
+\begin{description}[leftmargin=!, labelwidth=4em]
+    \item[\textbf{[CLRS09]}]
+    T. H. Cormen et al.,
+    \emph{Introduction to Algorithms}, 3rd ed., MIT Press, 2009.
+    
+    \item[\textbf{[KT06]}]
+    J. Kleinberg and \'{E}. Tardos,
+    \emph{Algorithm Design}, Pearson, 2006.
+    
+    \item[\textbf{[SW11]}]
+    R. Sedgewick and K. Wayne,
+    \emph{Algorithms}, 4th ed., Addison-Wesley, 2011.
+\end{description}
+
+\end{document}
