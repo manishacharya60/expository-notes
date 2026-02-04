@@ -1,0 +1,100 @@
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    vertex/.style={circle,fill=black,inner sep=3pt},
+    contract/.style={circle,draw=blue,dashed,inner sep=8pt},
+    scale=0.8
+]
+
+% Top row - Petersen to K5
+\begin{scope}
+    % Petersen graph with contraction groups
+    % Outer pentagon
+    \foreach \i in {0,1,2,3,4} {
+        \node[vertex] (outer\i) at ({90+\i*72}:2) {};
+    }
+    % Inner pentagram
+    \foreach \i in {0,1,2,3,4} {
+        \node[vertex] (inner\i) at ({90+\i*72}:0.9) {};
+    }
+    % Draw edges
+    \foreach \i in {0,1,2,3,4} {
+        \pgfmathtruncatemacro{\next}{mod(\i+1,5)}
+        \draw (outer\i) -- (outer\next);
+        \pgfmathtruncatemacro{\nexttwo}{mod(\i+2,5)}
+        \draw (inner\i) -- (inner\nexttwo);
+        \draw (outer\i) -- (inner\i);
+    }
+    % Contraction circles
+    \foreach \i in {0,1,2,3,4} {
+        \node[contract] at ({90+\i*72}:1.45) {};
+    }
+    \node at (0,-2.8) {Petersen Graph};
+\end{scope}
+
+% Arrow
+\draw[-Stealth, very thick] (2.8,0) -- (4.2,0);
+
+% K5
+\begin{scope}[xshift=7cm]
+    \foreach \i in {0,1,2,3,4} {
+        \node[vertex] (k5\i) at ({90+\i*72}:1.5) {};
+    }
+    \foreach \i in {0,1,2,3,4} {
+        \foreach \j in {0,1,2,3,4} {
+            \ifnum\i<\j
+                \draw (k5\i) -- (k5\j);
+            \fi
+        }
+    }
+    \node at (0,-2.8) {$K_5$};
+\end{scope}
+
+% Bottom row - Petersen to K_{3,3}
+\begin{scope}[yshift=-7cm]
+    % Petersen graph (no contraction circles this time)
+    % Outer pentagon
+    \foreach \i in {0,1,2,3,4} {
+        \node[vertex] (outer2\i) at ({90+\i*72}:2) {};
+    }
+    % Inner pentagram
+    \foreach \i in {0,1,2,3,4} {
+        \node[vertex] (inner2\i) at ({90+\i*72}:0.9) {};
+    }
+    % Draw edges
+    \foreach \i in {0,1,2,3,4} {
+        \pgfmathtruncatemacro{\next}{mod(\i+1,5)}
+        \draw (outer2\i) -- (outer2\next);
+        \pgfmathtruncatemacro{\nexttwo}{mod(\i+2,5)}
+        \draw (inner2\i) -- (inner2\nexttwo);
+        \draw (outer2\i) -- (inner2\i);
+    }
+    \node at (0,-2.8) {Petersen Graph};
+\end{scope}
+
+% Arrow
+\draw[-Stealth, very thick] (2.8,-7) -- (4.2,-7);
+
+% K_{3,3}
+\begin{scope}[xshift=6cm,yshift=-7cm]
+    % Left partition
+    \node[vertex] (a1) at (0,1.5) {};
+    \node[vertex] (a2) at (0,0) {};
+    \node[vertex] (a3) at (0,-1.5) {};
+    % Right partition
+    \node[vertex] (b1) at (2.5,1.5) {};
+    \node[vertex] (b2) at (2.5,0) {};
+    \node[vertex] (b3) at (2.5,-1.5) {};
+    % Draw all edges
+    \foreach \i in {1,2,3} {
+        \foreach \j in {1,2,3} {
+            \draw (a\i) -- (b\j);
+        }
+    }
+    \node at (1.25,-2.8) {$K_{3,3}$};
+\end{scope}
+
+\end{tikzpicture}
+\caption{$K_5$ and $K_{3,3}$ are both minors of the Petersen graph}
+\label{fig:petersen-minor}
+\end{figure}
